@@ -1,0 +1,56 @@
+<html>
+
+<head>
+
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+
+  function compile() {
+    var apiTokens = $('#apiTokens').val().split(',').map(function (apiToken) {
+      return apiToken.replace(/-/g, '_').replace(/\r?\n/g, '').trim();
+    });
+
+    var template = $('#template').val();
+
+    var compiled = $('#header').val() + "\n\n";
+
+    apiTokens.map(function (apiToken) {
+      compiled += template.replace(/%api_token%/g, apiToken) + '\n-- Repeat\n';
+    })
+
+    $('#compiled').val(compiled);
+
+  }
+
+</script>
+
+</head>
+
+<body>
+
+<div style="width:48%; float: left">
+  <span>API Tokens</span>
+  <textarea id="apiTokens" style="width: 100%; height: 10vh"></textarea>
+  <br>
+
+  <span>Script Header</span>
+  <textarea id="header" style="width: 100%; height: 10vh"></textarea>
+  <br>
+
+  <span>Repeat Template</span>
+  <textarea id="template" style="width: 100%; height: 60vh"></textarea>
+  <br>
+
+  <input type="button" value="Compile" onclick="compile()"></input>
+  <br>
+</div>
+
+<div style="width:48%; float: right">
+  <span>Compiled Script</span>
+  <textarea id="compiled" style="width: 100%; height: 90vh"></textarea>
+</div>
+
+</body>
+
+</html>

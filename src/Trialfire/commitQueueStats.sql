@@ -10,3 +10,7 @@ where startqueue >=  dateadd(day, -1, current_Date)
 order by queuelen desc , queue_time desc;
 
 
+
+select *
+from stl_commit_stats
+where xid = 34778
