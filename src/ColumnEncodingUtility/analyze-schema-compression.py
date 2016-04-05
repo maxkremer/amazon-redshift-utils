@@ -72,6 +72,7 @@ db_port = get_env_var('PGPORT', 5439)
 analyze_schema = 'public'
 target_schema = None
 analyze_table = None
+tablename_prefix = ''
 debug = False
 threads = 2
 output_file_handle = None
@@ -575,7 +576,7 @@ def usage(with_message):
     
 
 def main(argv):
-    supported_args = """db= db-user= db-host= db-port= target-schema= analyze-schema= analyze-table= threads= debug= output-file= do-execute= slot-count= ignore-errors= force= drop-old-data= comprows= query_group="""
+    supported_args = """db= db-user= db-host= db-port= target-schema= analyze-schema= tablename-prefix= analyze-table= threads= debug= output-file= do-execute= slot-count= ignore-errors= force= drop-old-data= comprows= query_group="""
     
     # extract the command line arguments
     try:
@@ -594,6 +595,7 @@ def main(argv):
     global threads
     global analyze_schema
     global analyze_table
+    global tablename_prefix
     global target_schema
     global debug
     global output_file_handle
@@ -630,6 +632,9 @@ def main(argv):
         elif arg == "--analyze-schema":
             if value != '' and value != None:
                 analyze_schema = value
+        elif arg == "--tablename-prefix":
+            if value != '' and value != None:
+                tablename_prefix = value
         elif arg == "--analyze-table":
             if value != '' and value != None:
                 analyze_table = value
@@ -753,8 +758,9 @@ from stv_blocklist group by tbl) b on a.id=b.tbl
 where pgn.nspname = '%s'
   and trim(a.name) not like '%%_$old'
   and trim(a.name) not like '%%_$mig'
+  and a.name like '%s_%%' 
 order by 2
-        ''' % (analyze_schema,)
+        ''' % (analyze_schema,tablename_prefix,)
     
     if debug:
         comment(statement)
