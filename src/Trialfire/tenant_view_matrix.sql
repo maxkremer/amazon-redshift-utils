@@ -78,3 +78,16 @@ left join view_view VV on (T.apitoken = VV.apitoken)
 left join watch_view WV on (T.apitoken = WV.apitoken)
 left join track_view TV on (T.apitoken = TV.apitoken)
 left join ecomm_view EV on (T.apitoken = EV.apitoken)
+
+
+--sanity check on interleaved sort key columns for event_[type] monthly tables
+
+with tables as (
+  select distinct id, name
+  from stv_tbl_perm
+  where name like 'event_%'
+)
+select trim(t.name), count(*)
+from svv_interleaved_columns c join  tables t on (c.tbl = t.id)
+group by t.name
+order by t.name
