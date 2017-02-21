@@ -56,8 +56,6 @@ ecomm_view as
   from pg_views
   where viewname like 'event_ecommerce_%'
 )
-
-
 select T.apitoken, 
 CASE WHEN  PV.viewname is null THEN 0 ELSE 1 END as Person_View
 ,CASE WHEN SV.viewname is null THEN 0 ELSE 1 END as Session_View
